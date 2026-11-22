@@ -1,0 +1,169 @@
+<Window x:Class="DroidDesk.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="DroidDesk" Height="760" Width="1120" MinHeight="650" MinWidth="900"
+        WindowStartupLocation="CenterScreen" Background="{StaticResource WindowBrush}"
+        Foreground="{StaticResource TextBrush}" FontFamily="Segoe UI Variable Text, Segoe UI">
+    <Window.Resources>
+        <Style x:Key="SectionHeading" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="17" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Margin" Value="0,0,0,5" />
+        </Style>
+        <Style TargetType="ListBoxItem">
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Margin" Value="0,0,0,8" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Border x:Name="ItemBorder" Background="{StaticResource PanelBrush}" BorderBrush="{StaticResource BorderBrushMuted}" BorderThickness="1" CornerRadius="11" Padding="13">
+                            <ContentPresenter />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="ItemBorder" Property="BorderBrush" Value="{StaticResource AccentBrush}" />
+                                <Setter TargetName="ItemBorder" Property="Background" Value="#202D2A" />
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ItemBorder" Property="BorderBrush" Value="#5D7A70" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="28">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="18" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Border Width="48" Height="48" CornerRadius="13" Background="{StaticResource AccentBrush}" VerticalAlignment="Center">
+                <TextBlock Text="D" Foreground="#10201A" FontWeight="Bold" FontSize="29" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Border>
+            <StackPanel Grid.Column="1" Margin="14,0,0,0" VerticalAlignment="Center">
+                <TextBlock Text="DroidDesk" FontSize="25" FontWeight="Bold" />
+                <TextBlock Text="Android apps, in Windows windows" FontSize="12" Foreground="{StaticResource MutedBrush}" Margin="0,2,0,0" />
+            </StackPanel>
+            <Button Grid.Column="2" Content="Set up Android runtime" Style="{StaticResource SecondaryButton}" Click="SetupRuntime_Click" VerticalAlignment="Center" />
+        </Grid>
+
+        <!-- Drop target -->
+        <Border Grid.Row="2" CornerRadius="15" BorderThickness="1" BorderBrush="#456557" Background="#17231F"
+                Padding="22" AllowDrop="True" DragEnter="DropZone_DragEnter" DragOver="DropZone_DragEnter" Drop="DropZone_Drop">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Border Width="48" Height="48" CornerRadius="12" Background="#28483B" VerticalAlignment="Center">
+                    <TextBlock Text="↓" FontSize="27" Foreground="{StaticResource AccentBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Border>
+                <StackPanel Grid.Column="1" Margin="15,0,10,0" VerticalAlignment="Center">
+                    <TextBlock Text="Drop an APK or XAPK here" FontSize="18" FontWeight="SemiBold" />
+                    <TextBlock Text="DroidDesk installs it, adds it to your library and opens it in its own window." Foreground="{StaticResource MutedBrush}" FontSize="12" Margin="0,4,0,0" TextWrapping="Wrap" />
+                </StackPanel>
+                <Button Grid.Column="2" Content="Browse files" Style="{StaticResource PrimaryButton}" Click="Browse_Click" VerticalAlignment="Center" />
+            </Grid>
+        </Border>
+
+        <!-- Main library -->
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="300" />
+            </Grid.ColumnDefinitions>
+            <Grid Margin="0,0,22,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="12" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <StackPanel>
+                        <TextBlock Text="Your Android apps" Style="{StaticResource SectionHeading}" />
+                        <TextBlock Text="Select an app, then open it in its own desktop window." FontSize="12" Foreground="{StaticResource MutedBrush}" />
+                    </StackPanel>
+                    <TextBlock Text="LIBRARY" Foreground="{StaticResource MutedBrush}" FontSize="10" FontWeight="Bold" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                </Grid>
+                <Grid Grid.Row="2">
+                    <ListBox x:Name="AppsList" ItemsSource="{Binding Apps}" SelectedItem="{Binding SelectedApp, Mode=TwoWay}"
+                             Background="Transparent" BorderThickness="0" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="46" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Border Width="42" Height="42" CornerRadius="11" Background="#2A3B43" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding Initial}" FontSize="19" FontWeight="SemiBold" Foreground="{StaticResource AccentBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Border>
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="11,0,8,0">
+                                        <TextBlock Text="{Binding DisplayName}" FontSize="14" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+                                        <TextBlock Text="{Binding PackageName}" FontSize="11" Foreground="{StaticResource MutedBrush}" TextTrimming="CharacterEllipsis" Margin="0,3,0,0" />
+                                    </StackPanel>
+                                    <TextBlock Grid.Column="2" Text="ANDROID APP" FontSize="9" Foreground="{StaticResource MutedBrush}" VerticalAlignment="Center" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <StackPanel x:Name="EmptyState" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False">
+                        <TextBlock Text="No apps installed yet" FontSize="17" FontWeight="SemiBold" HorizontalAlignment="Center" />
+                        <TextBlock Text="Add an APK or XAPK to get started." FontSize="12" Foreground="{StaticResource MutedBrush}" Margin="0,6,0,0" HorizontalAlignment="Center" />
+                    </StackPanel>
+                </Grid>
+            </Grid>
+
+            <!-- Side panel -->
+            <Border Grid.Column="1" Background="{StaticResource PanelBrush}" BorderBrush="{StaticResource BorderBrushMuted}" BorderThickness="1" CornerRadius="15" Padding="20">
+                <StackPanel>
+                    <TextBlock Text="Quick actions" Style="{StaticResource SectionHeading}" />
+                    <TextBlock Text="Launch each Android app in a separate resizable window." FontSize="12" Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" Margin="0,0,0,18" />
+                    <Button Content="Open selected app" Style="{StaticResource PrimaryButton}" Click="LaunchSelected_Click" Margin="0,0,0,9" />
+                    <Button Content="Remove selected app" Style="{StaticResource SecondaryButton}" Click="RemoveSelected_Click" Margin="0,0,0,20" />
+                    <Border Height="1" Background="{StaticResource BorderBrushMuted}" Margin="0,0,0,18" />
+                    <TextBlock Text="Runtime" FontSize="14" FontWeight="SemiBold" />
+                    <TextBlock Text="Android runs quietly in the background. DroidDesk uses a virtual display for each app window." Foreground="{StaticResource MutedBrush}" FontSize="12" TextWrapping="Wrap" Margin="0,6,0,13" />
+                    <Button Content="Start Android" Style="{StaticResource SecondaryButton}" Click="StartAndroid_Click" Margin="0,0,0,9" />
+                    <Button Content="Stop Android" Style="{StaticResource QuietButton}" Click="StopAndroid_Click" Margin="0,0,0,9" />
+                    <Button Content="Register APK / XAPK files" Style="{StaticResource QuietButton}" Click="RegisterFiles_Click" />
+                    <TextBlock Text="Registration lets Windows offer DroidDesk when you open an APK or XAPK file." Foreground="{StaticResource MutedBrush}" FontSize="10" TextWrapping="Wrap" Margin="0,8,0,0" />
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- Status -->
+        <Border Grid.Row="6" Background="{StaticResource PanelBrush}" BorderBrush="{StaticResource BorderBrushMuted}" BorderThickness="1" CornerRadius="9" Padding="12,9">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Ellipse x:Name="StatusDot" Width="7" Height="7" Fill="{StaticResource AccentBrush}" VerticalAlignment="Center" />
+                <TextBlock x:Name="StatusText" Grid.Column="1" Text="Ready. Add an APK or XAPK to begin." Foreground="{StaticResource MutedBrush}" FontSize="11" Margin="9,0,0,0" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                <TextBlock Grid.Column="2" Text="PREVIEW 0.1.0" Foreground="{StaticResource MutedBrush}" FontSize="9" VerticalAlignment="Center" />
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
