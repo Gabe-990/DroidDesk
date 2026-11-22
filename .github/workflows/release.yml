@@ -2,6 +2,7 @@ name: Release DroidDesk
 
 on:
   push:
+    branches: [main]
     tags: ["v*"]
   workflow_dispatch:
     inputs:
@@ -27,7 +28,7 @@ jobs:
       - name: Create GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
-          TAG: ${{ github.ref_name }}
+          TAG: ${{ github.ref_type == 'tag' && github.ref_name || 'v0.1.0' }}
         shell: pwsh
         run: |
           gh release create $env:TAG .\artifacts\DroidDesk-win-x64.zip --repo ${{ github.repository }} --title "DroidDesk $env:TAG" --notes "Windows x64 portable build. Extract and run DroidDesk.exe. Android runtime setup is provided in-app." --target ${{ github.sha }}
