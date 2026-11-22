@@ -229,7 +229,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         try
         {
             var executable = Environment.ProcessPath;
-            if (string.IsNullOrWhiteSpace(executable) || !File.Exists(executable))
+            if (executable is null || !File.Exists(executable))
                 throw new InvalidOperationException("Could not locate the DroidDesk executable. Publish or install the app first.");
 
             RegisterAssociation(".apk", "DroidDesk.APK", executable);

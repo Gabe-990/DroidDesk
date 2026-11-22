@@ -85,9 +85,10 @@ public sealed class AndroidRuntimeService
 
     private async Task PumpOutputAsync(StreamReader reader, CancellationToken cancellationToken)
     {
-        while (!reader.EndOfStream && !cancellationToken.IsCancellationRequested)
+        while (!cancellationToken.IsCancellationRequested)
         {
             var line = await reader.ReadLineAsync(cancellationToken);
+            if (line is null) break;
             if (!string.IsNullOrWhiteSpace(line)) Report(line.Trim());
         }
     }
