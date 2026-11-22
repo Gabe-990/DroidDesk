@@ -6,7 +6,6 @@
     <UseWindowsForms>false</UseWindowsForms>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <ApplicationIcon>..\..\assets\DroidDesk.ico</ApplicationIcon>
     <AssemblyName>DroidDesk</AssemblyName>
     <RootNamespace>DroidDesk</RootNamespace>
     <Version>0.1.0</Version>

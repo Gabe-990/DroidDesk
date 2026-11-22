@@ -1,0 +1,14 @@
+# .NET build output
+**/bin/
+**/obj/
+artifacts/
+TestResults/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.cache
+
+# Local runtime and Android virtual devices
+.android/

@@ -1,0 +1,54 @@
+name: Build Windows
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build DroidDesk for Windows x64
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Install .NET 10 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Show SDK information
+        run: dotnet --info
+
+      - name: Restore
+        run: dotnet restore .\src\DroidDesk\DroidDesk.csproj
+
+      - name: Publish self-contained Windows app
+        run: >-
+          dotnet publish .\src\DroidDesk\DroidDesk.csproj
+          --configuration Release
+          --runtime win-x64
+          --self-contained true
+          -p:PublishSingleFile=true
+          -p:IncludeNativeLibrariesForSelfExtract=true
+          --output .\artifacts\publish
+
+      - name: Create portable ZIP
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Path .\artifacts -Force | Out-Null
+          Compress-Archive -Path .\artifacts\publish\* -DestinationPath .\artifacts\DroidDesk-win-x64.zip -Force
+
+      - name: Upload Windows build
+        uses: actions/upload-artifact@v4
+        with:
+          name: DroidDesk-win-x64
+          path: .\artifacts\DroidDesk-win-x64.zip
+          if-no-files-found: error
+          retention-days: 30
