@@ -94,7 +94,6 @@ XAPK is a third-party packaging convention rather than a universal Android packa
 ```text
 DroidDesk/
 ├── .github/workflows/build-windows.yml
-├── assets/DroidDesk.ico
 ├── scripts/
 │   ├── Build.ps1
 │   ├── Check-Virtualization.ps1
@@ -127,23 +126,14 @@ DroidDesk source code is licensed under MIT. The runtime installer downloads And
 
 MIT. See [LICENSE](LICENSE).
 
-## Create the GitHub repository and push
+## Repository and Windows build
 
-The connected GitHub integration used to prepare this project can edit existing repositories but does not expose a create-repository action. To create the new repository from your Windows PC, install and sign in to GitHub CLI once:
+The source is hosted at [Gabe-990/DroidDesk](https://github.com/Gabe-990/DroidDesk). GitHub Actions builds a self-contained Windows x64 ZIP on pushes to `main`, pull requests, or a manual workflow run. Open the repository's **Actions** tab, choose **Build Windows**, and download the `DroidDesk-win-x64` artifact from a successful run.
 
-```powershell
-winget install --id GitHub.cli --exact
-gh auth login
-```
-
-Then run this from the extracted project folder:
+To build locally, install the .NET 10 SDK and run:
 
 ```powershell
-.\scripts\Publish-To-GitHub.ps1
+.\scripts\Build.ps1
 ```
 
-The script creates `Gabe-990/DroidDesk` as a **private** repository by default, initializes Git, commits the source, and pushes `main`. To create it as public instead:
-
-```powershell
-.\scripts\Publish-To-GitHub.ps1 -Public
-```
+The publish output is written to `artifacts\publish`. The app is currently an unsigned preview; Windows SmartScreen may show a warning when launching it.
